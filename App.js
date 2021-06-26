@@ -1,17 +1,57 @@
 import React, {useEffect, useState} from 'react';
-import { Text, TextInput, StyleSheet, View, Button, ScrollView } from 'react-native';
+import { Text, TextInput, StyleSheet, View, Button, ScrollView, Alert } from 'react-native';
 import FomularButton from './app/components/FomularButton'
 import ShapeButton from './app/components/ShapeButton'
 import ColorButton from './app/components/ColorButton'
-
 
 const TextSearch = () => {
   const [name, setName] = useState('');
   const [imprint_front, setImprintFront] = useState('');
   const [imprint_back, setImprintBack] = useState('');
-  const [formultatin, setFormulation] = useState('');
+  const [formulation, setFormulation] = useState('');
   const [shape, setShape] = useState('');
   const [color, setColor] = useState('');
+  
+  function objToQueryString(obj) {
+    const keyValuePairs = [];
+    for (const key in obj) {
+      keyValuePairs.push(encodeURIComponent(key) + '=' + encodeURIComponent(obj[key]));
+    }
+    return keyValuePairs.join('&');
+  }
+  const queryString = objToQueryString({
+    name: name,
+    formulation: 0,
+    imprint_front: 0,
+    imprint_back: 0,
+    shape: 0,
+    color: 0,
+  });
+
+  const goToResult = (response) => {
+    navigation.navigate("Result", {information: response.content});
+  };
+
+  const getDataUsingAsyncAwaitGetCall = async () => {
+    try {
+      //let response = await 
+      fetch(`https://da7569e8242f.ngrok.io/search?${queryString}`,
+      )
+      .then(response => response.json())
+      .then(response => {
+        console.log("upload success");
+        alert("Upload success!");
+
+        if (response) {
+          goToResult(response);
+        }
+
+      })
+    } catch (error) {
+      console.log("upload error", error);
+      alert("Upload failed!");
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -55,7 +95,7 @@ const TextSearch = () => {
               <Button
                 style={styles.buttonStyle} 
                 title="검색하기"
-                onPress={() => navigation.navigate('Result')}
+                onPress={getDataUsingAsyncAwaitGetCall}
               />
             </View>
           </View>

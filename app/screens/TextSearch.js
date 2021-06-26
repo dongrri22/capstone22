@@ -1,10 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import { Text, TextInput, StyleSheet, View, Button, ScrollView } from 'react-native';
-import axios from 'axios';
+import { Text, TextInput, StyleSheet, View, Button, ScrollView, Alert } from 'react-native';
 import FomularButton from './app/components/FomularButton'
 import ShapeButton from './app/components/ShapeButton'
 import ColorButton from './app/components/ColorButton'
-
 
 const TextSearch = () => {
   const [name, setName] = useState('');
@@ -13,21 +11,47 @@ const TextSearch = () => {
   const [formulation, setFormulation] = useState('');
   const [shape, setShape] = useState('');
   const [color, setColor] = useState('');
-
-  axios.get("http://ee35f03e3b15.ngrok.io/search", {
-    params: {
-      name,
-      imprint_front,
-      imprint_back,
+  
+  function objToQueryString(obj) {
+    const keyValuePairs = [];
+    for (const key in obj) {
+      keyValuePairs.push(encodeURIComponent(key) + '=' + encodeURIComponent(obj[key]));
     }
-  })
-  .then(function (response) {
-       // response  
-  }).catch(function (error) {
-      // 오류발생시 실행
-  }).then(function() {
-      // 항상 실행
+    return keyValuePairs.join('&');
+  }
+  const queryString = objToQueryString({
+    name: name,
+    formulation: 0,
+    imprint_front: 0,
+    imprint_back: 0,
+    shape: 0,
+    color: 0,
   });
+
+  const goToResult = (response) => {
+    navigation.navigate("Result", {information: response.content});
+  };
+
+  const getDataUsingAsyncAwaitGetCall = async () => {
+    try {
+      //let response = await 
+      fetch(`https://da7569e8242f.ngrok.io/search?${queryString}`,
+      )
+      .then(response => response.json())
+      .then(response => {
+        console.log("upload success");
+        alert("Upload success!");
+
+        if (response) {
+          goToResult(response);
+        }
+
+      })
+    } catch (error) {
+      console.log("upload error", error);
+      alert("Upload failed!");
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -71,7 +95,7 @@ const TextSearch = () => {
               <Button
                 style={styles.buttonStyle} 
                 title="검색하기"
-                onPress={() => navigation.navigate('Result')}
+                onPress={getDataUsingAsyncAwaitGetCall}
               />
             </View>
           </View>
