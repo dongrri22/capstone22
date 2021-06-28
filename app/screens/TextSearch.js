@@ -54,9 +54,9 @@ const TextSearch = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
         <View style={styles.header}>
-          <Text style={{textAlign:'center', fontSize:28,paddingBottom:12, fontWeight: 'bold', color:'#000000'}}>직접 입력</Text>
+          <Text style={{textAlign:'center', fontSize:24,paddingBottom:12, fontWeight: 'bold', color:'#000000'}}>직접 입력</Text>
           <View style={{width:"100%",borderBottomWidth:2,borderColor:'#00bfff'}} />
         </View>
         <View style={styles.content}>
@@ -100,7 +100,7 @@ const TextSearch = () => {
             </View>
           </View>
         </View>
-      </View>
+      </ScrollView>
   );
 }
 

@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
   },
   textStyle: {
     color : "#FFFFFF",
-    fontSize: 16,
+    fontSize: 12,
     padding: 8,
     textAlign: "center",
   },
